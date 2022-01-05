@@ -141,6 +141,23 @@ client.add_agent("{\"id\":1}")
 client.add_agent("{\"id\":2}")
 client.add_agent("{\"id\":3}")
 
+
+agents = Agents()
+agents_str = json.loads(client.get_agents(),
+                        object_hook=lambda d: SimpleNamespace(**d)).Agents
+agents_str = [agent.Agent for agent in agents_str]
+for a in agents_str:
+    id = int(a.id)
+    value = float(a.value)
+    src = int(a.src)
+    dest = int(a.dest)
+    speed = float(a.speed)
+    x, y, z = a.pos.split(',')
+    agent_pos = (float(x), float(y), float(z))
+    curr_agent = Agent(id, value, src, dest, speed, agent_pos)
+    agents.add(curr_agent)
+
+
 # this command starts the server - the game is running now
 client.start()
 

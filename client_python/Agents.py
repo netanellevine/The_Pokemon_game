@@ -71,12 +71,13 @@ class Agent:
 class Agents:
 
     def __init__(self):
-        self._size = 0
-        self._agents = dict[int, Agent]
+        self._size: int = int(0)
+        self._agents: {int, Agent} = {}
 
     def add(self, agent: Agent):
-        self._agents[agent.id()] = agent
-        self.size += 1
+        id = agent.id()
+        self._agents[id] = agent
+        self._size += 1
 
     def agents(self):
         return self._agents
