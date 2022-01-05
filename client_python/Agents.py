@@ -45,30 +45,27 @@ class Agent:
     def set_pos(self, pos: tuple[float, float, float]):
         self._pos = pos
 
-    def add_path(self,id):
+    def add_path(self, id):
         self._path.append(id)
 
     def delete_attended(self):
         self._path.pop(0)
 
-    def calculate_time(self,src,dest,graph : DiGraph):
+    def calculate_time(self, src, dest, graph: DiGraph):
         start = self.src()
         weight = 0.0
         nodes = graph.nodes()
         if len(self._path):
             weight = nodes.get(start).get_out_edge(self._path[0])
-            for i in range(len(self._path)-1):
-                weight=weight+nodes.get(i).get_out_edge(self._path[i+1])
-            weight=weight+nodes.get(self._path[-1]).get_out_edge(src)
-            weight=weight+nodes.get(src).get_out_edge(dest)
-            return weight/self.speed()*10
-        else:
-            weight = weight+nodes.get(start).get_out_edge(src)
+            for i in range(len(self._path) - 1):
+                weight = weight + nodes.get(i).get_out_edge(self._path[i + 1])
+            weight = weight + nodes.get(self._path[-1]).get_out_edge(src)
             weight = weight + nodes.get(src).get_out_edge(dest)
-            return weight/self.speed()*10
-
-
-
+            return weight / self.speed() * 10
+        else:
+            weight = weight + nodes.get(start).get_out_edge(src)
+            weight = weight + nodes.get(src).get_out_edge(dest)
+            return weight / self.speed() * 10
 
 
 class Agents:
@@ -95,16 +92,12 @@ class Agents:
         agent.set_value(value)
         agent.set_speed(speed)
 
-    def assign_agent(self,src,dest):
+    def assign_agent(self, src, dest):
         best_time_of_path = float("inf")
         id = 0
         for agent in self._agents.values():
-            time_path=agent.calculate_time(src,dest)
+            time_path = agent.calculate_time(src, dest)
             if best_time_of_path > time_path:
                 best_time_of_path = time_path
-                id= agent.id()
+                id = agent.id()
         return id
-
-
-
-

@@ -26,9 +26,9 @@ class Pokemon:
 class Pokemons:
     def __init__(self):
         self._size = 0
-        self._pokemons = list[Pokemon]
+        self._pokemons = []
 
-    def add(self, pokemon: Pokemon):
+    def add(self, pokemon):
         self._pokemons.append(pokemon)
         self._size += 1
 
