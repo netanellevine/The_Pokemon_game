@@ -26,14 +26,19 @@ class Pokemon:
 class Pokemons:
     def __init__(self):
         self._size = 0
-        self._pokemons = []
+        self._pokemons: {tuple[float, float, float], Pokemon} = {}
 
-    def add(self, pokemon):
-        self._pokemons.append(pokemon)
-        self._size += 1
+    def add(self, pokemon: Pokemon):
+        if self._pokemons.get(pokemon.pos()) is None:
+            self._pokemons[pokemon.pos()] = pokemon
+            self._size += 1
+            return True
+        return False
 
     def pokemons(self):
         return self._pokemons
 
     def size(self):
         return self._size
+
+

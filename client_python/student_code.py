@@ -60,17 +60,17 @@ graph = client.get_graph()
 algo = GraphAlgo()
 algo.load_from_json(graph)
 
-pokemons_str = json.loads(client.get_pokemons(),
-                          object_hook=lambda d: SimpleNamespace(**d)).Pokemons
-pokemons_str = [p.Pokemon for p in pokemons_str]
-pokemons = Pokemons()
-for p in pokemons_str:
-    value = float(p.value)
-    direction = int(p.type)
-    x, y, z = p.pos.split(',')
-    pok_pos = (float(x), float(y), float(z))
-    curr_pok = Pokemon(value, direction, pok_pos)
-    pokemons.add(curr_pok)
+# pokemons_str = json.loads(client.get_pokemons(),
+#                           object_hook=lambda d: SimpleNamespace(**d)).Pokemons
+# pokemons_str = [p.Pokemon for p in pokemons_str]
+# pokemons = Pokemons()
+# for p in pokemons_str:
+#     value = float(p.value)
+#     direction = int(p.type)
+#     x, y, z = p.pos.split(',')
+#     pok_pos = (float(x), float(y), float(z))
+#     curr_pok = Pokemon(value, direction, pok_pos)
+#     pokemons.add(curr_pok)
 
 # direction = int(pokemons_str[0].type)
 # x, y, _ = pokemons_str[0].pos.split(',')
@@ -97,6 +97,7 @@ for p in pokemons_str:
 #     agent_pos = (float(x), float(y), float(z))
 #     curr_agent = Agent(id, value, src, dest, speed, agent_pos)
 #     agents.add(curr_agent)
+#     print(id)
 
 graph_json = client.get_graph()
 
@@ -136,12 +137,33 @@ def my_scale(data, x=False, y=False):
 
 radius = 15
 
-client.add_agent("{\"id\":5}")
-client.add_agent("{\"id\":1}")
-client.add_agent("{\"id\":2}")
-client.add_agent("{\"id\":3}")
+# ______________create pokemons object__________________
+pokemons_str = json.loads(client.get_pokemons(),
+                          object_hook=lambda d: SimpleNamespace(**d)).Pokemons
+pokemons_str = [p.Pokemon for p in pokemons_str]
+pokemons = Pokemons()
+for p in pokemons_str:
+    value = float(p.value)
+    direction = int(p.type)
+    x, y, z = p.pos.split(',')
+    pok_pos = (float(x), float(y), float(z))
+    curr_pok = Pokemon(value, direction, pok_pos)
+    pokemons.add(curr_pok)
 
+res = True
+cen, weight = algo.centerPoint()
+age = client.get_agents()
+age1 = ""
+agent_num = 0
+while res:
+    res = client.add_agent("{\"id\":" + str(agent_num) + "}")
+    age1 = client.get_agents()
+    if age1 == age:
+        res = False
+    age = age1
+    agent_num = agent_num + 1
 
+# ______________create agents object__________________
 agents = Agents()
 agents_str = json.loads(client.get_agents(),
                         object_hook=lambda d: SimpleNamespace(**d)).Agents
@@ -157,7 +179,6 @@ for a in agents_str:
     curr_agent = Agent(id, value, src, dest, speed, agent_pos)
     agents.add(curr_agent)
 
-
 # this command starts the server - the game is running now
 client.start()
 
@@ -168,20 +189,42 @@ The GUI and the "algo" are mixed - refactoring using MVC design pattern is requi
 
 while client.is_running() == 'true':
     # stop_button.draw()
-    pokemons = json.loads(client.get_pokemons(),
-                          object_hook=lambda d: SimpleNamespace(**d)).Pokemons
-    pokemons = [p.Pokemon for p in pokemons]
-    for p in pokemons:
-        x, y, _ = p.pos.split(',')
-        p.pos = SimpleNamespace(x=my_scale(
-            float(x), x=True), y=my_scale(float(y), y=True))
-    agents = json.loads(client.get_agents(),
-                        object_hook=lambda d: SimpleNamespace(**d)).Agents
-    agents = [agent.Agent for agent in agents]
-    for a in agents:
-        x, y, _ = a.pos.split(',')
-        a.pos = SimpleNamespace(x=my_scale(
-            float(x), x=True), y=my_scale(float(y), y=True))
+
+    # _____update agents______
+    agents_str = json.loads(client.get_agents(),
+                            object_hook=lambda d: SimpleNamespace(**d)).Agents
+    agents_str = [agent.Agent for agent in agents_str]
+    for a in agents_str:
+        id = int(a.id)
+        value = float(a.value)
+        src = int(a.src)
+        dest = int(a.dest)
+        speed = float(a.speed)
+        x, y, z = a.pos.split(',')
+        agent_pos = (float(x), float(y), float(z))
+        agents.update(id, value, src, dest, speed, agent_pos)
+    # ______________________________________________________________
+
+    # ______update pokemons________
+    pokemons_str = json.loads(client.get_pokemons(),
+                              object_hook=lambda d: SimpleNamespace(**d)).Pokemons
+    pokemons_str = [p.Pokemon for p in pokemons_str]
+    pokemons = Pokemons()
+    for p in pokemons_str:
+        value = float(p.value)
+        direction = int(p.type)
+        x, y, z = p.pos.split(',')
+        pok_pos = (float(x), float(y), float(z))
+        curr_pok = Pokemon(value, direction, pok_pos)
+        added = pokemons.add(curr_pok)
+        if added:
+            src, dest = algo.assign_pokemon_to_edge(direction, pok_pos)
+            src = src.id()
+            dest = dest.id()
+            id = agents.assign_agent(src, dest, algo)
+            print(agents.agents().get(id).path())
+    # _________________________________________________________________
+'''
     # check events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -228,7 +271,7 @@ while client.is_running() == 'true':
     for agent in agents:
         pygame.draw.circle(screen, Color(122, 61, 23),
                            (int(agent.pos.x), int(agent.pos.y)), 10)
-# draw pokemons (note: should differ (GUI wise) between the up and the
+    # draw pokemons (note: should differ (GUI wise) between the up and the
     # down pokemons (currently they are marked in the same way).
     for p in pokemons:
         pygame.draw.circle(screen, Color(0, 255, 255), (int(p.pos.x), int(p.pos.y)), 10)
@@ -250,3 +293,4 @@ while client.is_running() == 'true':
 
     client.move()
 # # game over:
+'''

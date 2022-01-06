@@ -30,6 +30,9 @@ class Agent:
     def pos(self):
         return self._pos
 
+    def path(self):
+        return self._path
+
     def set_value(self, value: float):
         self._value = value
 
