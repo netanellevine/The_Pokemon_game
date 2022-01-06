@@ -34,8 +34,8 @@ class Button:
         width = image_b.get_width()
         height = image_b.get_height()
         self.image = pygame.transform.scale(image_b, (int(width * scale_b), int(height * scale_b)))
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (xp, yp)
+        self.rect = self.image.get_rect(topleft=(10, 10))
+        # self.rect.topleft = (xp, yp)
         self.clicked = False
 
     def draw(self):
@@ -49,7 +49,7 @@ class Button:
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
 
-stop_button = Button(10, 20, stop_img, 0.2)
+stop_button = Button(5, 8, stop_img, 0.2)
 
 clock = pygame.time.Clock()
 pygame.font.init()
@@ -59,45 +59,6 @@ client.start_connection(HOST, PORT)
 graph = client.get_graph()
 algo = GraphAlgo()
 algo.load_from_json(graph)
-
-# pokemons_str = json.loads(client.get_pokemons(),
-#                           object_hook=lambda d: SimpleNamespace(**d)).Pokemons
-# pokemons_str = [p.Pokemon for p in pokemons_str]
-# pokemons = Pokemons()
-# for p in pokemons_str:
-#     value = float(p.value)
-#     direction = int(p.type)
-#     x, y, z = p.pos.split(',')
-#     pok_pos = (float(x), float(y), float(z))
-#     curr_pok = Pokemon(value, direction, pok_pos)
-#     pokemons.add(curr_pok)
-
-# direction = int(pokemons_str[0].type)
-# x, y, _ = pokemons_str[0].pos.split(',')
-# pos = (float(x), float(y))
-# print(direction)
-# print(pos)
-# src, dest = algo.assign_pokemon_to_edge(direction, pos)
-# print(src)
-# print(dest)
-# print(pokemons_str)
-# x 35.1995873559322
-# y 32.10234658319328
-# agents = Agents()
-# agents_str = json.loads(client.get_agents(),
-#                         object_hook=lambda d: SimpleNamespace(**d)).Agents
-# agents_str = [agent.Agent for agent in agents_str]
-# for a in agents_str:
-#     id = int(a.id)
-#     value = float(a.value)
-#     src = int(a.src)
-#     dest = int(a.dest)
-#     speed = float(a.speed)
-#     x, y, z = a.pos.split(',')
-#     agent_pos = (float(x), float(y), float(z))
-#     curr_agent = Agent(id, value, src, dest, speed, agent_pos)
-#     agents.add(curr_agent)
-#     print(id)
 
 graph_json = client.get_graph()
 
@@ -138,10 +99,11 @@ def my_scale(data, x=False, y=False):
 radius = 15
 
 # ______________create pokemons object__________________
+pokemons = Pokemons()
 pokemons_str = json.loads(client.get_pokemons(),
                           object_hook=lambda d: SimpleNamespace(**d)).Pokemons
 pokemons_str = [p.Pokemon for p in pokemons_str]
-pokemons = Pokemons()
+
 for p in pokemons_str:
     value = float(p.value)
     direction = int(p.type)
@@ -168,6 +130,7 @@ agents = Agents()
 agents_str = json.loads(client.get_agents(),
                         object_hook=lambda d: SimpleNamespace(**d)).Agents
 agents_str = [agent.Agent for agent in agents_str]
+
 for a in agents_str:
     id = int(a.id)
     value = float(a.value)
@@ -179,6 +142,14 @@ for a in agents_str:
     curr_agent = Agent(id, value, src, dest, speed, agent_pos)
     agents.add(curr_agent)
 
+# assign pokemon to agents at first time
+for pok in pokemons.pokemons().values():
+    pok_pos = pok.pos()
+    direction = pok.direction()
+    src, dest = algo.assign_pokemon_to_edge(direction, pok_pos)
+    id = agents.assign_agent(src.id(), dest.id(), algo)
+    print(agents.agents().get(id).path())
+
 # this command starts the server - the game is running now
 client.start()
 
@@ -188,9 +159,9 @@ The GUI and the "algo" are mixed - refactoring using MVC design pattern is requi
 """
 
 while client.is_running() == 'true':
-    # stop_button.draw()
+    stop_button.draw()
 
-    # _____update agents______
+    # __________update agents__________
     agents_str = json.loads(client.get_agents(),
                             object_hook=lambda d: SimpleNamespace(**d)).Agents
     agents_str = [agent.Agent for agent in agents_str]
@@ -203,13 +174,17 @@ while client.is_running() == 'true':
         x, y, z = a.pos.split(',')
         agent_pos = (float(x), float(y), float(z))
         agents.update(id, value, src, dest, speed, agent_pos)
-    # ______________________________________________________________
+    # _______________________________________________
 
-    # ______update pokemons________
+    # __________update pokemons__________
     pokemons_str = json.loads(client.get_pokemons(),
                               object_hook=lambda d: SimpleNamespace(**d)).Pokemons
     pokemons_str = [p.Pokemon for p in pokemons_str]
-    pokemons = Pokemons()
+  # print(pokemons_str)
+    #print(pokemons_str)
+    for p in pokemons.pokemons().values():
+        p.set_killed(True)
+
     for p in pokemons_str:
         value = float(p.value)
         direction = int(p.type)
@@ -219,12 +194,21 @@ while client.is_running() == 'true':
         added = pokemons.add(curr_pok)
         if added:
             src, dest = algo.assign_pokemon_to_edge(direction, pok_pos)
-            src = src.id()
-            dest = dest.id()
-            id = agents.assign_agent(src, dest, algo)
-            print(agents.agents().get(id).path())
-    # _________________________________________________________________
-'''
+         #   print(f'src: {src.id()} dest:{dest.id()}')
+            id = agents.assign_agent(src.id(), dest.id(), algo)
+         #   print('''added''')
+            #print(agents.agents().get(id).path())
+    li = []
+    for p in pokemons.pokemons().keys():
+        if pokemons.pokemons().get(p).killed():
+            li.append(p)
+    for i in li:
+        pokemons.pokemons().pop(i)
+    #  _________________________________________________
+    # if i == 10000:
+    #     pygame.quit()
+    #     exit(0)
+
     # check events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -268,13 +252,13 @@ while client.is_running() == 'true':
                          (src_x, src_y), (dest_x, dest_y))
 
     # draw agents
-    for agent in agents:
+    for agent in agents.agents().values():
         pygame.draw.circle(screen, Color(122, 61, 23),
-                           (int(agent.pos.x), int(agent.pos.y)), 10)
+                           (int(my_scale(agent.pos()[0],x=True)), int(my_scale(agent.pos()[1],y=True))), 10)
     # draw pokemons (note: should differ (GUI wise) between the up and the
     # down pokemons (currently they are marked in the same way).
-    for p in pokemons:
-        pygame.draw.circle(screen, Color(0, 255, 255), (int(p.pos.x), int(p.pos.y)), 10)
+    for p in pokemons.pokemons().values():
+        pygame.draw.circle(screen, Color(0, 255, 255), (int(my_scale(p.pos()[0],x=True)), int(my_scale(p.pos()[1],y=True))), 10)
 
     # update screen changes
     display.update()
@@ -283,14 +267,15 @@ while client.is_running() == 'true':
     clock.tick(60)
 
     # choose next edge
-    for agent in agents:
-        if agent.dest == -1:
-            next_node = (agent.src - 1) % len(graph.Nodes)
-            client.choose_next_edge(
-                '{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(next_node) + '}')
-            ttl = client.time_to_end()
-            print(ttl, client.get_info())
+    for agent in agents.agents().values():
+        if agent.dest() == -1:
+            next_node = agent.next_dest()
+            # print("next_node: ", next_node)
+            if next_node != -1:
+                client.choose_next_edge(
+                    '{"agent_id":' + str(agent.id()) + ', "next_node_id":' + str(next_node) + '}')
+                #ttl = client.time_to_end()
+                #print(ttl, client.get_info())
 
     client.move()
 # # game over:
-'''

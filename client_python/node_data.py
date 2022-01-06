@@ -34,7 +34,6 @@ class node_data:
         return self._in_edges.get(src)
 
     def get_out_edge(self, dest: int):
-        print(self._out_edges.get(dest))
         return self._out_edges.get(dest)
 
     def in_edges(self):
