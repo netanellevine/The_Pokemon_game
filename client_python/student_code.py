@@ -180,8 +180,8 @@ while client.is_running() == 'true':
     pokemons_str = json.loads(client.get_pokemons(),
                               object_hook=lambda d: SimpleNamespace(**d)).Pokemons
     pokemons_str = [p.Pokemon for p in pokemons_str]
-  # print(pokemons_str)
-    #print(pokemons_str)
+    # print(pokemons_str)
+    # print(pokemons_str)
     for p in pokemons.pokemons().values():
         p.set_killed(True)
 
@@ -254,11 +254,12 @@ while client.is_running() == 'true':
     # draw agents
     for agent in agents.agents().values():
         pygame.draw.circle(screen, Color(122, 61, 23),
-                           (int(my_scale(agent.pos()[0],x=True)), int(my_scale(agent.pos()[1],y=True))), 10)
+                           (int(my_scale(agent.pos()[0], x=True)), int(my_scale(agent.pos()[1], y=True))), 10)
     # draw pokemons (note: should differ (GUI wise) between the up and the
     # down pokemons (currently they are marked in the same way).
     for p in pokemons.pokemons().values():
-        pygame.draw.circle(screen, Color(0, 255, 255), (int(my_scale(p.pos()[0],x=True)), int(my_scale(p.pos()[1],y=True))), 10)
+        pygame.draw.circle(screen, Color(0, 255, 255),
+                           (int(my_scale(p.pos()[0], x=True)), int(my_scale(p.pos()[1], y=True))), 10)
 
     # update screen changes
     display.update()
@@ -274,8 +275,8 @@ while client.is_running() == 'true':
             if next_node != -1:
                 client.choose_next_edge(
                     '{"agent_id":' + str(agent.id()) + ', "next_node_id":' + str(next_node) + '}')
-                #ttl = client.time_to_end()
-                #print(ttl, client.get_info())
+                # ttl = client.time_to_end()
+                # print(ttl, client.get_info())
 
     client.move()
 # # game over:
