@@ -121,6 +121,9 @@ for p in pokemons_str:
     pok_pos = (float(x), float(y), float(z))
     curr_pok = Pokemon(value, direction, pok_pos)
     pokemons.add(curr_pok)
+    src, dest = algo.assign_pokemon_to_edge(direction, pok_pos)
+
+    client.add_agent("{\"id\":" + str(src.id()) + "}")
 
 res = True
 cen, weight = algo.centerPoint()
@@ -128,7 +131,7 @@ age = client.get_agents()
 age1 = ""
 agent_num = 0
 while res:
-    res = client.add_agent("{\"id\":" + str(agent_num) + "}")
+    client.add_agent("{\"id\":" + str(agent_num) + "}")
     age1 = client.get_agents()
     if age1 == age:
         res = False
@@ -158,7 +161,7 @@ for pok in pokemons.pokemons().values():
     direction = pok.direction()
     src, dest = algo.assign_pokemon_to_edge(direction, pok_pos)
     id = agents.assign_agent(src.id(), dest.id(), algo)
-    print(agents.agents().get(id).path())
+   # print(agents.agents().get(id).path())
 
 # this command starts the server - the game is running now
 client.start()
@@ -167,7 +170,6 @@ client.start()
 The code below should be improved significantly:
 The GUI and the "algo" are mixed - refactoring using MVC design pattern is required.
 """
-
 while client.is_running() == 'true':
     stop_button.draw()
 
@@ -194,7 +196,7 @@ while client.is_running() == 'true':
     # print(pokemons_str)
     for p in pokemons.pokemons().values():
         p.set_killed(True)
-
+    # pat = []
     for p in pokemons_str:
         value = float(p.value)
         direction = int(p.type)
@@ -204,10 +206,35 @@ while client.is_running() == 'true':
         added = pokemons.add(curr_pok)
         if added:
             src, dest = algo.assign_pokemon_to_edge(direction, pok_pos)
-         #   print(f'src: {src.id()} dest:{dest.id()}')
+            # pat.append((src.id(),dest.id()))
+        #   print('''added''')
+        #   print(f'value: {curr_pok.value()}  pos: {curr_pok.pos()} and direction :{curr_pok.direction()}')
+        #   src, dest = algo.assign_pokemon_to_edge(direction, pok_pos)
+        #   print(f'src: {src.id()} dest:{dest.id()}')
             id = agents.assign_agent(src.id(), dest.id(), algo)
-         #   print('''added''')
-            #print(agents.agents().get(id).path())
+        #   print('''added''')
+        # print(agents.agents().get(id).path())
+   #  agent = agents.agents().get(0)
+   # # print(pat)
+   #  if len(agent.path()):
+   #      close = agent.path()[-1]
+   #  else:
+   #      close = agent.src()
+   #  for i in range(len(pat)):
+   #      for j in range(len(pat)):
+   #          weight1, fur = algo.shortest_path(close, pat[i][0])
+   #          weight2, fur2 = algo.shortest_path(close, pat[j][0])
+   #          if weight1 > weight2:
+   #              a = pat[i]
+   #              pat[i] = pat[j]
+   #              pat[j] = pat[i]
+   #      src, dest = pat[i]
+   #      agents.assign_agent(src, dest, algo)
+   #      if len(agent.path()):
+   #          close = agent.path()[-1]
+   #      else:
+   #          close = agent.src()
+   # print(pat)
     li = []
     for p in pokemons.pokemons().keys():
         if pokemons.pokemons().get(p).killed():
@@ -302,7 +329,7 @@ while client.is_running() == 'true':
 
 
     # refresh rate
-    clock.tick(60)
+    clock.tick(10)
 
     # choose next edge
     for agent in agents.agents().values():
