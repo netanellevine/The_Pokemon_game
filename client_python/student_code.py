@@ -160,7 +160,7 @@ for pok in pokemons.pokemons().values():
     pok_pos = pok.pos()
     direction = pok.direction()
     src, dest = algo.assign_pokemon_to_edge(direction, pok_pos)
-    id = agents.assign_agent(src.id(), dest.id(), algo)
+    id = agents.assign_agent(src.id(), dest.id(), algo , pok.value())
    # print(agents.agents().get(id).path())
 
 # this command starts the server - the game is running now
@@ -211,7 +211,7 @@ while client.is_running() == 'true':
         #   print(f'value: {curr_pok.value()}  pos: {curr_pok.pos()} and direction :{curr_pok.direction()}')
         #   src, dest = algo.assign_pokemon_to_edge(direction, pok_pos)
         #   print(f'src: {src.id()} dest:{dest.id()}')
-            id = agents.assign_agent(src.id(), dest.id(), algo)
+            id = agents.assign_agent(src.id(), dest.id(), algo , curr_pok.value())
         #   print('''added''')
         # print(agents.agents().get(id).path())
    #  agent = agents.agents().get(0)

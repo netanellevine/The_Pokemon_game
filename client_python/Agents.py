@@ -63,7 +63,7 @@ class Agent:
             return self.path()[0]
         return -1
 
-    def calculate_time(self, src, dest, algo: GraphAlgo ):
+    def calculate_time(self, src, dest, algo: GraphAlgo , value ):
         graph = algo.get_graph()
         start = self.src()
         weight = 0.0
@@ -72,7 +72,7 @@ class Agent:
             if start == src and dest == self._path[0]:
                 return -1, []
             n = nodes.get(start)
-            if self._path[0] == -1:
+            if self._path[0] < 0 :
                 if len(self._path) - 1 and start != self._path[1]:
                     e = n.get_out_edge(self.path()[1])
                     weight = e
@@ -83,18 +83,18 @@ class Agent:
                 if self._path[i] == src and self._path[i + 1] == dest:
                     return -1, []
                 if self._path[i] != self._path[i + 1]:
-                    if self._path[i + 1] == -1 and i + 2 < len(self.path()) - 1 and self._path[i] != self._path[i + 2]:
+                    if self._path[i + 1] < 0 and i + 2 < len(self.path()) - 1 and self._path[i] != self._path[i + 2]:
                         weight = weight + nodes.get(self._path[i]).get_out_edge(self._path[i + 2])
-                    elif self._path[i] != -1 and self._path[i + 1] != -1:
+                    elif self._path[i] > -1 and self._path[i + 1] > -1:
                         weight = weight + nodes.get(self._path[i]).get_out_edge(self._path[i + 1])
-            if self._path[-1] != -1:
+            if self._path[-1] > -1:
                 w, path = algo.shortest_path(self.path()[-1], src)
             else:
                 w, path = algo.shortest_path(self.path()[-2], src)
             weight = weight + w
             weight = weight + nodes.get(src).get_out_edge(dest)
             path.append(dest)
-            path.append(-1)
+            path.append(-1*value)
             return weight / self.speed(), path
         else:
             if self.src() != src:
@@ -110,10 +110,10 @@ class Agent:
 
     def get_route_list(self):
         li = []
-        if len(self._path) > 1 and self._path[1] == -1:
+        if len(self._path) > 1 and self._path[1] < 0:
             li.append((self.src(), self._path[0]))
         for i in range(len(self._path) - 2):
-            if self._path[i + 2] == -1:
+            if self._path[i + 2] < 0:
                 li.append((self._path[i], self._path[i + 1]))
         return li
 
@@ -164,16 +164,16 @@ class Agents:
         agent.set_value(value)
         agent.set_speed(speed)
         agent.sort_by_closest(algo)
-        while len(agent.path()) and (agent.path()[0] == src or agent.path()[0] == -1):
+        while len(agent.path()) and (agent.path()[0] == src or agent.path()[0] < 0):
             agent.path().pop(0)
         # update path as well
 
-    def assign_agent(self, src, dest, algo):
+    def assign_agent(self, src, dest, algo,value):
         best_time_of_path = float("inf")
         best_path = []
         Id = 0
         for agent in self._agents.values():
-            time_path, path = agent.calculate_time(src, dest, algo )
+            time_path, path = agent.calculate_time(src, dest, algo,value)
             if best_time_of_path > time_path:
                 best_time_of_path = time_path
                 Id = agent.id()
