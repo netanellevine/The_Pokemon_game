@@ -1,4 +1,5 @@
 from client_python.DiGraph import DiGraph
+from client_python.GraphAlgo import GraphAlgo
 from client_python.node_data import node_data
 
 
@@ -48,27 +49,52 @@ class Agent:
     def set_pos(self, pos: tuple[float, float, float]):
         self._pos = pos
 
-    def add_path(self, id):
-        self._path.append(id)
+    def add_path(self, next_stop):
+        if isinstance(next_stop, int):
+            self._path.append(next_stop)
+        else:
+            self._path = self._path + next_stop
 
     def delete_attended(self):
         self._path.pop(0)
 
-    def calculate_time(self, src, dest, graph: DiGraph):
+    def next_dest(self):
+        if len(self.path()):
+            return self.path()[0]
+        return -1
+
+    def calculate_time(self, src, dest, algo: GraphAlgo):
+        graph = algo.get_graph()
         start = self.src()
         weight = 0.0
         nodes = graph.nodes()
-        if len(self._path):
-            weight = nodes.get(start).get_out_edge(self._path[0])
-            for i in range(len(self._path) - 1):
-                weight = weight + nodes.get(i).get_out_edge(self._path[i + 1])
-            weight = weight + nodes.get(self._path[-1]).get_out_edge(src)
+        if len(self.path()):
+            if start==src and dest == self._path[0]:
+                return -1,[]
+            n = nodes.get(start)
+            if start != self._path[0]:
+                e = n.get_out_edge(self.path()[0])
+                weight = e
+            for i in range(len(self.path()) - 1):
+                if self._path[i] == src and self._path[i + 1] == dest:
+                    return -1, []
+                if self._path[i] != self._path[i + 1]:
+                    weight = weight + nodes.get(self._path[i]).get_out_edge(self._path[i + 1])
+            w, path = algo.shortest_path(self.path()[-1], src)
+            weight = weight + w
             weight = weight + nodes.get(src).get_out_edge(dest)
-            return weight / self.speed() * 10
+            path.append(dest)
+            return weight / self.speed(), path
         else:
-            weight = weight + nodes.get(start).get_out_edge(src)
+            if self.src() != src:
+                w, path = algo.shortest_path(self.src(), src)
+            else:
+                w = 0
+                path = [src]
+            weight = weight + w
             weight = weight + nodes.get(src).get_out_edge(dest)
-            return weight / self.speed() * 10
+            path.append(dest)
+            return weight / self.speed(), path
 
 
 class Agents:
@@ -90,18 +116,26 @@ class Agents:
 
     def update(self, id: int, value: float, src: int, dest: int, speed: float, pos: tuple[float, float, float]):
         agent = self._agents.get(id)
+        while len(agent.path()) and agent.path()[0] == src:
+            agent.path().pop(0)
         agent.set_pos(pos)
         agent.set_src(src)
         agent.set_dest(dest)
         agent.set_value(value)
         agent.set_speed(speed)
+        # update path as well
 
-    def assign_agent(self, src, dest):
+    def assign_agent(self, src, dest, algo):
         best_time_of_path = float("inf")
+        best_path = []
         id = 0
         for agent in self._agents.values():
-            time_path = agent.calculate_time(src, dest)
+            time_path, path = agent.calculate_time(src, dest, algo)
             if best_time_of_path > time_path:
                 best_time_of_path = time_path
                 id = agent.id()
+                best_path = path
+        best_agent = self.agents().get(id)
+        best_agent.add_path(best_path)
+
         return id
