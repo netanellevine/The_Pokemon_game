@@ -23,6 +23,7 @@ PORT = 6666
 # server host (default localhost 127.0.0.1)
 HOST = '127.0.0.1'
 pygame.init()
+pygame.font.init()
 
 screen = display.set_mode((WIDTH, HEIGHT), depth=32, flags=RESIZABLE)
 stop_img = pygame.image.load('../icons/stop_btn.png').convert_alpha()
@@ -297,10 +298,8 @@ while client.is_running() == 'true':
         scaled_rect = agent_img.get_rect(
             center=(int(my_scale(agent.pos()[0], x=True)), int(my_scale(agent.pos()[1], y=True))))
         screen.blit(agent_img, scaled_rect)
-        # pygame.draw.circle(screen, Color(122, 61, 23),
-        #                    (int(my_scale(agent.pos()[0], x=True)), int(my_scale(agent.pos()[1], y=True))), 10)
-    # draw pokemons (note: should differ (GUI wise) between the up and the
-    # down pokemons (currently they are marked in the same way).
+
+    # draw pokemons
     for p in pokemons.pokemons().values():
 
         if p.direction() == 1:  # pok1.png == UP
@@ -312,8 +311,18 @@ while client.is_running() == 'true':
             scaled_rect = pok2_img.get_rect(
                 center=(int(my_scale(p.pos()[0], x=True)), int(my_scale(p.pos()[1], y=True))))
             screen.blit(pok2_img, scaled_rect)
-        # pygame.draw.circle(screen, Color(0, 255, 255),
-        #                    (int(my_scale(p.pos()[0], x=True)), int(my_scale(p.pos()[1], y=True))), 10)
+
+    # draw current_info
+    info = json.loads(client.get_info())
+    info = info.get("GameServer")
+    current_info = "|GAME LEVEL: " + str(info.get('game_level')) + " | MOVES: " + str(info.get(
+        "moves")) + " | POINTS: " + str(info.get("grade")) + " | REMAINING TIME: " + str(client.time_to_end()) + "|"
+    INFO_FONT = font.SysFont("Arial", 20, bold=True)
+    TEXT_COLOR = Color(222, 22, 22)
+    info_surface = INFO_FONT.render(current_info, True, TEXT_COLOR)
+    info_scale = info_surface.get_rect(
+            center=(screen.get_width() - (info_surface.get_width()), screen.get_height() - 10))
+    screen.blit(info_surface, info_scale)
 
     # update screen changes
     display.update()
