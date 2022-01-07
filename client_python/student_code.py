@@ -26,7 +26,9 @@ pygame.init()
 pygame.font.init()
 
 screen = display.set_mode((WIDTH, HEIGHT), depth=32, flags=RESIZABLE)
+game_icon = pygame.image.load('../icons/game_icon.png')
 stop_img = pygame.image.load('../icons/stop_btn.png').convert_alpha()
+background_img = pygame.image.load('../icons/background1.jpg').convert_alpha()
 pok1_img = pygame.image.load('../icons/pok13.png').convert_alpha()
 pok1_img = pygame.transform.scale(pok1_img, (int(pok1_img.get_width() * 0.7), int(pok1_img.get_height() * 0.7)))
 pok2_img = pygame.image.load('../icons/pok2.png').convert_alpha()
@@ -172,7 +174,10 @@ The code below should be improved significantly:
 The GUI and the "algo" are mixed - refactoring using MVC design pattern is required.
 """
 while client.is_running() == 'true':
+    screen.blit(background_img, (0, 0))
     stop_button.draw()
+    pygame.display.set_caption("Pokemon hunt GAME")
+    pygame.display.set_icon(game_icon)
 
     # __________update agents__________
     agents_str = json.loads(client.get_agents(),
@@ -258,7 +263,7 @@ while client.is_running() == 'true':
 
 
     # refresh surface
-    screen.fill(Color(0, 0, 0))
+    # screen.fill(Color(0, 0, 0))
     stop_button.draw()
 
     # draw nodes
