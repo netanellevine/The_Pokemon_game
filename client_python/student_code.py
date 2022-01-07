@@ -186,7 +186,7 @@ while client.is_running() == 'true':
         speed = float(a.speed)
         x, y, z = a.pos.split(',')
         agent_pos = (float(x), float(y), float(z))
-        agents.update(id, value, src, dest, speed, agent_pos)
+        agents.update(id, value, src, dest, speed, agent_pos,algo)
     # _______________________________________________
 
     # __________update pokemons__________
