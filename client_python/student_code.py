@@ -8,7 +8,7 @@ from types import SimpleNamespace
 
 import pygame
 from pygame import *
-from pygame import gfxdraw
+from pygame import gfxdraw, MOUSEBUTTONDOWN
 
 from client import Client
 # init pygame
@@ -25,7 +25,13 @@ HOST = '127.0.0.1'
 pygame.init()
 
 screen = display.set_mode((WIDTH, HEIGHT), depth=32, flags=RESIZABLE)
-stop_img = pygame.image.load('stop_btn.png').convert_alpha()
+stop_img = pygame.image.load('../icons/stop_btn.png').convert_alpha()
+pok1_img = pygame.image.load('../icons/pok1.png').convert_alpha()
+pok1_img = pygame.transform.scale(pok1_img, (int(pok1_img.get_width() * 0.7), int(pok1_img.get_height() * 0.7)))
+pok2_img = pygame.image.load('../icons/pok2.png').convert_alpha()
+pok2_img = pygame.transform.scale(pok2_img, (int(pok2_img.get_width() * 0.7), int(pok2_img.get_height() * 0.7)))
+agent_img = pygame.image.load('../icons/agent.png').convert_alpha()
+agent_img = pygame.transform.scale(agent_img, (int(agent_img.get_width() * 0.9), int(agent_img.get_height() * 0.9)))
 
 
 class Button:
@@ -33,23 +39,27 @@ class Button:
     def __init__(self, xp, yp, image_b, scale_b):
         width = image_b.get_width()
         height = image_b.get_height()
-        self.image = pygame.transform.scale(image_b, (int(width * scale_b), int(height * scale_b)))
-        self.rect = self.image.get_rect(topleft=(10, 10))
+        self.image = pygame.transform.scale(image_b, (int(width * scale_b) - 100, int(height * scale_b) - 50))
+        self.rect = self.image.get_rect(topleft=(0, 0))
         # self.rect.topleft = (xp, yp)
-        self.clicked = False
+        self._clicked = False
+
+    def clicked(self):
+        pos = pygame.mouse.get_pos()
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1:
+                return True
 
     def draw(self):
         pos = pygame.mouse.get_pos()
         if self.rect.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1 and not self.clicked:
-                self.clicked = True
-                pygame.quit()
-                exit(0)
-
+                self._clicked = True
         screen.blit(self.image, (self.rect.x, self.rect.y))
+        # screen.blit(self.image, (int(my_scale(self.rect.x, x=True)), int(my_scale(self.rect.y, y=True))))
 
 
-stop_button = Button(5, 8, stop_img, 0.2)
+stop_button = Button(0, 0, stop_img, 0.2)
 
 clock = pygame.time.Clock()
 pygame.font.init()
@@ -214,6 +224,10 @@ while client.is_running() == 'true':
         if event.type == pygame.QUIT:
             pygame.quit()
             exit(0)
+        if stop_button.clicked():
+            pygame.quit()
+            exit(0)
+
 
     # refresh surface
     screen.fill(Color(0, 0, 0))
@@ -253,16 +267,39 @@ while client.is_running() == 'true':
 
     # draw agents
     for agent in agents.agents().values():
-        pygame.draw.circle(screen, Color(122, 61, 23),
-                           (int(my_scale(agent.pos()[0], x=True)), int(my_scale(agent.pos()[1], y=True))), 10)
+        screen.blit(agent_img, (int(my_scale(agent.pos()[0], x=True)), int(my_scale(agent.pos()[1], y=True))))
+        # pygame.draw.circle(screen, Color(122, 61, 23),
+        #                    (int(my_scale(agent.pos()[0], x=True)), int(my_scale(agent.pos()[1], y=True))), 10)
     # draw pokemons (note: should differ (GUI wise) between the up and the
     # down pokemons (currently they are marked in the same way).
     for p in pokemons.pokemons().values():
-        pygame.draw.circle(screen, Color(0, 255, 255),
-                           (int(my_scale(p.pos()[0], x=True)), int(my_scale(p.pos()[1], y=True))), 10)
+
+        if p.direction() == 1:  # pok1.png == UP
+            screen.blit(pok1_img, (int(my_scale(p.pos()[0], x=True)), int(my_scale(p.pos()[1], y=True))))
+
+        else:  # pok2.png == DOWN
+            screen.blit(pok2_img, (int(my_scale(p.pos()[0], x=True)), int(my_scale(p.pos()[1], y=True))))
+        # pygame.draw.circle(screen, Color(0, 255, 255),
+        #                    (int(my_scale(p.pos()[0], x=True)), int(my_scale(p.pos()[1], y=True))), 10)
 
     # update screen changes
     display.update()
+
+# _________________________________________________________
+#     def draw_icon(self, obj_to_draw: Drawable):
+#         """
+#         Display Drawable object on screen.
+#         Drawable object have an icon and proportion.
+#         """
+#         icon = pygame.image.load(obj_to_draw.get_icon_path())
+#         scaled_image = pygame.transform.scale(icon, obj_to_draw.get_icon_proportions())
+#         rect = scaled_image.get_rect(
+#             center=(obj_to_draw.get_pos().get_scaled_x(), obj_to_draw.get_pos().get_scaled_y()))
+#         self.screen.blit(scaled_image, rect)
+# _________________________________________________________
+
+
+
 
     # refresh rate
     clock.tick(60)
