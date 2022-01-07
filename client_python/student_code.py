@@ -26,7 +26,7 @@ pygame.init()
 
 screen = display.set_mode((WIDTH, HEIGHT), depth=32, flags=RESIZABLE)
 stop_img = pygame.image.load('../icons/stop_btn.png').convert_alpha()
-pok1_img = pygame.image.load('../icons/pok1.png').convert_alpha()
+pok1_img = pygame.image.load('../icons/pok10.png').convert_alpha()
 pok1_img = pygame.transform.scale(pok1_img, (int(pok1_img.get_width() * 0.7), int(pok1_img.get_height() * 0.7)))
 pok2_img = pygame.image.load('../icons/pok2.png').convert_alpha()
 pok2_img = pygame.transform.scale(pok2_img, (int(pok2_img.get_width() * 0.7), int(pok2_img.get_height() * 0.7)))
@@ -302,10 +302,14 @@ while client.is_running() == 'true':
     for p in pokemons.pokemons().values():
 
         if p.direction() == 1:  # pok1.png == UP
-            screen.blit(pok1_img, (int(my_scale(p.pos()[0], x=True)), int(my_scale(p.pos()[1], y=True))))
+            scaled_rect = pok1_img.get_rect(
+                center=(int(my_scale(p.pos()[0], x=True)), int(my_scale(p.pos()[1], y=True))))
+            screen.blit(pok1_img, rect)
 
         else:  # pok2.png == DOWN
-            screen.blit(pok2_img, (int(my_scale(p.pos()[0], x=True)), int(my_scale(p.pos()[1], y=True))))
+            scaled_rect = pok2_img.get_rect(
+                center=(int(my_scale(p.pos()[0], x=True)), int(my_scale(p.pos()[1], y=True))))
+            screen.blit(pok2_img, scaled_rect)
         # pygame.draw.circle(screen, Color(0, 255, 255),
         #                    (int(my_scale(p.pos()[0], x=True)), int(my_scale(p.pos()[1], y=True))), 10)
 
