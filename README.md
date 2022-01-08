@@ -1,5 +1,5 @@
-# The_Pokemon_game
-__
+# The Pokemon game
+
 ## Overview
 In this task we were asked to implement a program that simulates the most effiecient way for an agent (single or more) to catch pokemons on 
 a directed weighted graph. There are 16 stages, 0-15, at the end of each stage you get grade, the grade is set according to the 
