@@ -1,11 +1,9 @@
-from client_python.DiGraph import DiGraph
 from client_python.GraphAlgo import GraphAlgo
-from client_python.node_data import node_data
 
 
 class Agent:
-    def __init__(self, iden: int, value: float, src: int, dest: int, speed: float, pos: tuple[float, float, float]):
-        self._id = iden
+    def __init__(self, id: int, value: float, src: int, dest: int, speed: float, pos: tuple[float, float, float]):
+        self._id = id
         self._value = value
         self._src = src
         self._dest = dest
@@ -63,7 +61,7 @@ class Agent:
             return self.path()[0]
         return -1
 
-    def calculate_time(self, src, dest, algo: GraphAlgo , value ):
+    def calculate_time(self, src, dest, algo: GraphAlgo, value):
         graph = algo.get_graph()
         start = self.src()
         weight = 0.0
@@ -72,7 +70,7 @@ class Agent:
             if start == src and dest == self._path[0]:
                 return -1, []
             n = nodes.get(start)
-            if self._path[0] < 0 :
+            if self._path[0] < 0:
                 if len(self._path) - 1 and start != self._path[1]:
                     e = n.get_out_edge(self.path()[1])
                     weight = e
@@ -94,7 +92,7 @@ class Agent:
             weight = weight + w
             weight = weight + nodes.get(src).get_out_edge(dest)
             path.append(dest)
-            path.append(-1*value)
+            path.append(-1 * value)
             return weight / self.speed(), path
         else:
             if self.src() != src:
@@ -106,7 +104,7 @@ class Agent:
             weight = weight + nodes.get(src).get_out_edge(dest)
             path.append(dest)
             path.append(-1)
-            return weight / (self.speed()*10), path
+            return weight / (self.speed() * 10), path
 
     def get_route_list(self):
         li = []
@@ -156,8 +154,8 @@ class Agents:
     def size(self):
         return self._size
 
-    def update(self, iden: int, value: float, src: int, dest: int, speed: float, pos: tuple[float, float, float], algo):
-        agent = self._agents.get(iden)
+    def update(self, id: int, value: float, src: int, dest: int, speed: float, pos: tuple[float, float, float], algo):
+        agent = self._agents.get(id)
         agent.set_pos(pos)
         agent.set_src(src)
         agent.set_dest(dest)
@@ -168,17 +166,16 @@ class Agents:
             agent.path().pop(0)
         # update path as well
 
-    def assign_agent(self, src, dest, algo,value):
+    def assign_agent(self, src, dest, algo, value):
         best_time_of_path = float("inf")
         best_path = []
         Id = 0
         for agent in self._agents.values():
-            time_path, path = agent.calculate_time(src, dest, algo,value)
+            time_path, path = agent.calculate_time(src, dest, algo, value)
             if best_time_of_path > time_path:
                 best_time_of_path = time_path
                 Id = agent.id()
                 best_path = path
         best_agent = self.agents().get(Id)
         best_agent.add_path(best_path)
-
         return Id
