@@ -7,3 +7,8 @@ numbers of pokemons that were catched (the higher the better) and to the amount 
 In addition we were asked to implement as well a graphic user interface(GUI) which will demonstrare the stage and the user will be able to observe
 the whole process. 
 
+
+
+
+
+## How to use:
