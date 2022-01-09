@@ -1,0 +1,45 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Agents{
+- Agents:{int,Agent}
++ add(Agent)
++update(self, id: int, value: float, src: int, dest: int, speed: float, pos: tuple[float, float, float], algo)
++assign_agent(self, src, dest, algo, value)
++size(self)
+}
+class Agent{
+-id: int
+-value: float
+-src: int
+-dest: int
+-speed: float
+-pos: tuple[float, float, float]
++sort_by_closest(self, algo)
++get_route_list(self)
++calculate_time(self, src, dest, algo: GraphAlgo, value)
++next_dest(self)
++delete_attended(self)
++add_path(self, next_stop)
+}
+Agents <|-- Agent
+class Pokemons{
+-size
+-pokemons: {str, Pokemon}
++add(self, pokemon: Pokemon)
+}
+class Pokemon{
+-value: float
+ -direction: int
+  -pos: tuple[float, float, float]
+}
+Pokemons <|--Pokemon
+
+class mainGame{
+Where the fun begins
+Starts the game()
+}
+mainGame <|-- Pokemons
+mainGame <|-- Agents
+
+@enduml
