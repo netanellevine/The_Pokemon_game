@@ -8,58 +8,12 @@ In addition, we were asked to implement as well a graphic user interface(GUI) th
 the whole process. 
 <br>
 
+## <a href="https://github.com/netanellevine/The_Pokemon_game/wiki">Check out our wiki for further information</a>
 
 ### Short clip to demonstrate the program
 https://user-images.githubusercontent.com/74298433/148699608-14c18e47-d926-4536-9f9b-005bfb37f2e6.mp4
 
 <br>
-
-## Structure 
-**The project contains the following:**
-* Data - this directory contains 4 different graphs as a json format.
-* icons - this directory contains the icons we used in this project.
-* client_pyhton - this directory contains all the python files.<br>
-  a. Agents - file contains 2 classes Agent and Agent.<br>
-  b. Pokemons - file contains 2 classes Pokemons and Pokemon.<br>
-  c. DiGraph - file contains the Graph object.<br>
-  d. GraphAlgo - file contains the GraphAlgo object.<br>
-  e. node_data - file contains the node_data object.<br>
-  f. client - file contains the client object the api that is responsible of this program.<br>
-  g. utilities - file with some method to help the project.<br>
-  h. tests - this directory contains tests wev'e made for the project.<br>
-* Ex4_Server_V0.0.jar - the jar file that makes this program runnable.
-  
-## The Game
-<b>The game rules are:<b>
-1) Agents can go only on Edges (in the direction of the Edge only).<br>
-    **Each Agent holds:**
-    - id -> the id of the agent.
-    - value -> the value of the agent the value is greater when the agent collects more pokemon.
-    - src -> the source node that the agent left before the last update.
-    - dest -> the destination node that the agent is going to.
-    - speed -> the agent speed, can vary in the process of the game.
-    - pos -> the position of the agent (X, Y, Z).
-    - path -> the path of the agent, updated during the game.
-2) Pokemons are positioned in the edges between nodes.<br>
-    **Each Pokemon holds:**<br>
-    -  value -> hos much his prize
-    -  direction -> 1 if it's an upper edge -1 if it's a lower edge ( src < dest == upper edge).
-    -  pos - the position of the Pokemon (X, Y, Z).
-    -  killed - a flag for us to know if the pokemon was caught.
-3) There are 16 stages (0-15) each stage lasts between 30-120 sec.
-4) The amount of moves the Agents are allowed to do is MAX 10 moves per second (for the 30-sec stage the MAX moves is 300).
-5) Throughout the time the Client gives us new pokemon and our goal is to catch as many as we can in that time.
-
-
-                                                                                
-
-## Algorithm
-  We used a Greedy Algorithm that at each given time it chooses to assign a Pokemon to an Agent according to 
-  Dijkstra Algorithm of finding the shortest path between two nodes.
-  We calculate the path between every agent to the new Pokemon and we choose the shortest of them all.                                                                              
-                                                                             
-
-
 
 ## How to use:
 First clone the git
@@ -74,5 +28,4 @@ Go into client_python folder and activate the exe file
 ```
 cd client_python && student_code.exe
 ```
-## Classes Diagram
-   <img src="https://github.com/netanellevine/The_Pokemon_game/blob/master/Project%20UML.png">
+
