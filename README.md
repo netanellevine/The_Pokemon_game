@@ -12,8 +12,24 @@ the whole process.
 ### Short clip to demonstrate the program
 https://user-images.githubusercontent.com/74298433/148699608-14c18e47-d926-4536-9f9b-005bfb37f2e6.mp4
 
+## Structure 
+The project contains the following:
+* Data - this directory contains 4 different graphs as a json format.
+* icons - this directory contains the icons we used in this project.
+* client_pyhton - this directory contains all the python files.
+  a. Agents - file contains 2 classes Agent and Agent.
+  b. Pokemons - file contains 2 classes Pokemons and Pokemon.
+  c. DiGraph - file contains the Graph object.
+  d. GraphAlgo - file contains the GraphAlgo object.
+  e. node_data - file contains the node_data object.
+  f. client - file contains the client object the api that is responsible of this program.
+  g. utilities - file with some method to help the project.
+  h. tests - this directory contains tests wev'e made for the project.
+* Ex4_Server_V0.0.jar - the jar file that makes this program runnable.
+  
+  
 
-
+  
 
 
 
@@ -32,5 +48,5 @@ java -jar Ex4_Server_v0.0.jar <case number>
 ```
 Go into client_python folder and activate the exe file
 ```
-cd client_python && game.exe
+cd client_python && student_code.exe
 ```
