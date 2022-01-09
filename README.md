@@ -11,7 +11,9 @@ the whole process.
 
 ### Short clip to demonstrate the program
 https://user-images.githubusercontent.com/74298433/148699608-14c18e47-d926-4536-9f9b-005bfb37f2e6.mp4
+
 <br>
+
 ## Structure 
 **The project contains the following:**
 * Data - this directory contains 4 different graphs as a json format.
@@ -49,14 +51,13 @@ https://user-images.githubusercontent.com/74298433/148699608-14c18e47-d926-4536-
 5) Throught the time the Client gives us a new pokemons and our goal is to catch as many as we can in that time.
 
 
+                                                                                
 
-## Algorithmss
-We used a Greedy Algorithm that at a given point chooses to assign a Pokemon to an Agent according t
-  
-
-
-
-
+## Algorithm
+  We used a Greedy Algorithm that at each given time it chooses to assign a Pokemon to an Agent according to 
+  Dijkstra Algorithm of finding the shortest path between two nodes.
+  We calculate the path between every agent to the new Pokemon and we choose the shortest of them all.                                                                              
+                                                                             
 
 
 
@@ -73,3 +74,5 @@ Go into client_python folder and activate the exe file
 ```
 cd client_python && student_code.exe
 ```
+## Classes Diagram
+   <img src="https://github.com/netanellevine/The_Pokemon_game/blob/master/Project%20UML.puml">
