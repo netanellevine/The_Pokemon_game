@@ -46,13 +46,12 @@ https://user-images.githubusercontent.com/74298433/148699608-14c18e47-d926-4536-
     -  killed - a flag for us to know if the pokemon was caught.
 3) There are 16 stages (0-15) each stage lasts between 30-120 sec.
 4) The amount of moves the Agents allowed to do is MAX 10 moves per second (for 30 sec stage the MAX moves is 300).
-5) Throught the time the Client gives us a new pokemons and our goal is to catch as many as we can in the time.
+5) Throught the time the Client gives us a new pokemons and our goal is to catch as many as we can in that time.
 
 
 
-## Algorithm
-
-
+## Algorithmss
+We used a Greedy Algorithm that at a given point chooses to assign a Pokemon to an Agent according t
   
 
 
