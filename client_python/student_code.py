@@ -5,6 +5,8 @@ Very simple GUI example for python client to communicates with the server and "p
 """
 import json
 from types import SimpleNamespace
+import sys
+sys.path.append("..")
 
 from HELPER import *
 from client import Client
