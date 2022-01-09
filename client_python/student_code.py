@@ -30,11 +30,11 @@ stop_img = pygame.image.load('../icons/stop_btn.png').convert_alpha()
 # background img
 background_img = pygame.image.load('../icons/background3.jpg').convert_alpha()
 # pokemon icon for the -1 type edges
-down_pok_img = add_img('../icons/pok2.png', 0.7)
+down_pok_img = add_img('../icons/pok2.png', 0.8)
 # pokemon icon for the 1 type edges
-up_pok_img = add_img('../icons/pok16.png', 0.5)
+up_pok_img = add_img('../icons/pok10.png', 0.7)
 # agent icon
-agent_img = add_img('../icons/agent.png', 0.9)
+agent_img = add_img('../icons/agent.png', 0.98)
 
 
 class Button:
@@ -292,8 +292,7 @@ try:
             if p.direction() == 1:  # pok1.png == UP
                 scaled_rect = up_pok_img.get_rect(
                     center=(int(my_scale(p.pos()[0], X=True)), int(my_scale(p.pos()[1], Y=True))))
-                screen.blit(up_pok_img, rect)
-
+                screen.blit(up_pok_img, scaled_rect)
             else:  # pok2.png == DOWN
                 scaled_rect = down_pok_img.get_rect(
                     center=(int(my_scale(p.pos()[0], X=True)), int(my_scale(p.pos()[1], Y=True))))
@@ -301,13 +300,7 @@ try:
 
         # ______________draw current_game_info______________
         info = json.loads(client.get_info()).get("GameServer")
-        current_info = "|GAME LEVEL: " + str(info.get('game_level')) + " | MOVES: " + str(info.get(
-            "moves")) + " | POINTS: " + str(info.get("grade")) + " | REMAINING TIME: " + str(client.time_to_end()) + "|"
-        INFO_FONT = font.SysFont("Arial", 20, bold=True)
-        TEXT_COLOR = Color(222, 22, 22)
-        info_surface = INFO_FONT.render(current_info, True, TEXT_COLOR)
-        info_scale = info_surface.get_rect(
-            center=(screen.get_width() - (info_surface.get_width()), screen.get_height() - 10))
+        info_surface, info_scale = get_info(info, str(client.time_to_end()), screen)
         screen.blit(info_surface, info_scale)
 
         # update screen changes

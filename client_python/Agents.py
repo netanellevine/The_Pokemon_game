@@ -1,3 +1,5 @@
+import math
+
 from client_python.GraphAlgo import GraphAlgo
 
 
@@ -93,7 +95,7 @@ class Agent:
             weight = weight + nodes.get(src).get_out_edge(dest)
             path.append(dest)
             path.append(-1 * value)
-            return weight / self.speed(), path
+            return (weight / self.speed()), path
         else:
             if self.src() != src:
                 w, path = algo.shortest_path(self.src(), src)
@@ -104,7 +106,7 @@ class Agent:
             weight = weight + nodes.get(src).get_out_edge(dest)
             path.append(dest)
             path.append(-1)
-            return weight / (self.speed() * 10), path
+            return (weight / self.speed()), path
 
     def get_route_list(self):
         li = []
