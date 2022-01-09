@@ -30,14 +30,14 @@ https://user-images.githubusercontent.com/74298433/148699608-14c18e47-d926-4536-
 ## The Game
 <b>The game rules are:<b>
 1) Agents can go only on Edges (in the direction of the Edge only).<br>
-  **Each Agent holds:**
-  - id -> the id of the agent.
-  - value -> tha value of the agent the value is greater when the agent collect more pokemons.
-  - src -> the source node that the agent left before the last update.
-  - dest -> the destination node that the agent is going to.
-  - speed -> the agent speed, can vary in the procces of the game.
-  - pos -> the position of the agent (X, Y, Z).
-  - path -> the path of the agent, updated during the game.
+    **Each Agent holds:**
+    - id -> the id of the agent.
+    - value -> tha value of the agent the value is greater when the agent collect more pokemons.
+    - src -> the source node that the agent left before the last update.
+    - dest -> the destination node that the agent is going to.
+    - speed -> the agent speed, can vary in the procces of the game.
+    - pos -> the position of the agent (X, Y, Z).
+    - path -> the path of the agent, updated during the game.
 2) Pokemons are positioned in the edges between nodes.<br>
     **Each Pokemon holds:**<br>
     -  value -> hos much his prize
