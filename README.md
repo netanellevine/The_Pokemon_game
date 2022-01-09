@@ -34,21 +34,21 @@ https://user-images.githubusercontent.com/74298433/148699608-14c18e47-d926-4536-
 1) Agents can go only on Edges (in the direction of the Edge only).<br>
     **Each Agent holds:**
     - id -> the id of the agent.
-    - value -> tha value of the agent the value is greater when the agent collect more pokemons.
+    - value -> the value of the agent the value is greater when the agent collects more pokemon.
     - src -> the source node that the agent left before the last update.
     - dest -> the destination node that the agent is going to.
-    - speed -> the agent speed, can vary in the procces of the game.
+    - speed -> the agent speed, can vary in the process of the game.
     - pos -> the position of the agent (X, Y, Z).
     - path -> the path of the agent, updated during the game.
 2) Pokemons are positioned in the edges between nodes.<br>
     **Each Pokemon holds:**<br>
     -  value -> hos much his prize
-    -  direction -> 1 if i'ts an upper edge -1 if i'ts a lower edge ( src < dest == upper edge).
+    -  direction -> 1 if it's an upper edge -1 if it's a lower edge ( src < dest == upper edge).
     -  pos - the position of the Pokemon (X, Y, Z).
     -  killed - a flag for us to know if the pokemon was caught.
 3) There are 16 stages (0-15) each stage lasts between 30-120 sec.
-4) The amount of moves the Agents allowed to do is MAX 10 moves per second (for 30 sec stage the MAX moves is 300).
-5) Throught the time the Client gives us a new pokemons and our goal is to catch as many as we can in that time.
+4) The amount of moves the Agents are allowed to do is MAX 10 moves per second (for the 30-sec stage the MAX moves is 300).
+5) Throughout the time the Client gives us new pokemon and our goal is to catch as many as we can in that time.
 
 
                                                                                 
@@ -75,4 +75,4 @@ Go into client_python folder and activate the exe file
 cd client_python && student_code.exe
 ```
 ## Classes Diagram
-   <img src="https://github.com/netanellevine/The_Pokemon_game/blob/master/Project%20UML.puml">
+   <img src="https://github.com/netanellevine/The_Pokemon_game/blob/master/Project%20UML.png">
