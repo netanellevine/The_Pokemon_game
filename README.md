@@ -17,11 +17,11 @@ https://user-images.githubusercontent.com/74298433/148695924-58b8514f-3d9b-41d0-
 
 
 ## How to use:
-
+First clone the git
 ```
-git clone https://github.com/netanellevine/The_Pokemon_game.git
+git clone https://github.com/netanellevine/The_Pokemon_game.git && cd The_Pokemon_game
 ```
-
+Run the server
 ```
 java -jar Ex4_Server_v0.0.jar <case number>
 ```
