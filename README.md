@@ -8,7 +8,8 @@ In addition, we were asked to implement as well a graphic user interface(GUI) wh
 the whole process. 
 
 
-## Short clip to demonstrate the program
+
+### Short clip to demonstrate the program
 https://user-images.githubusercontent.com/74298433/148699608-14c18e47-d926-4536-9f9b-005bfb37f2e6.mp4
 
 
