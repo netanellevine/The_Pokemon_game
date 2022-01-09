@@ -27,4 +27,5 @@ java -jar Ex4_Server_v0.0.jar <case number>
 ```
 Go into client_python folder and activate the exe file
 ```
-
+cd client_python && student_code.exe
+```
